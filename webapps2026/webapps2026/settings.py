@@ -102,3 +102,13 @@ CSRF_COOKIE_SECURE = True
 
 CONVERSION_SERVICE_URL = 'https://localhost:8443/webapps2026/conversion'
 INITIAL_BALANCE_GBP = 500.00
+
+# Email (SMTP via Gmail)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_HOST_USER', 'noreply@webapps2026.com')
+SITE_NAME = 'WebApps2026'

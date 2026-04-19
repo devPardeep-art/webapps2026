@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
+    .container { max-width: 600px; margin: 40px auto; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .header { background: #1a73e8; padding: 30px; text-align: center; color: #fff; }
+    .header h1 { margin: 0; font-size: 24px; }
+    .body { padding: 30px; color: #333; }
+    .body h2 { color: #1a73e8; }
+    .detail { background: #f0f4ff; border-radius: 6px; padding: 15px 20px; margin: 20px 0; }
+    .detail p { margin: 6px 0; }
+    .warning { background: #fff3cd; border-left: 4px solid #ffc107; padding: 12px 16px; margin: 20px 0; border-radius: 4px; }
+    .footer { text-align: center; padding: 20px; font-size: 12px; color: #999; border-top: 1px solid #eee; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>{{ site_name }}</h1>
+    </div>
+    <div class="body">
+      <h2>New Login Detected</h2>
+      <p>Hi {{ first_name }}, we noticed a new login to your account.</p>
+      <div class="detail">
+        <p><strong>Username:</strong> {{ username }}</p>
+        <p><strong>Time:</strong> {{ login_time }}</p>
+      </div>
+      <div class="warning">
+        <strong>Wasn't you?</strong> If you did not log in, please change your password immediately and contact support.
+      </div>
+    </div>
+    <div class="footer">
+      &copy; {{ site_name }} &mdash; This is an automated message, please do not reply.
+    </div>
+  </div>
+</body>
+</html>

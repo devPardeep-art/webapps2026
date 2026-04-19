@@ -1,14 +1,27 @@
 import requests
 from decimal import Decimal
+from datetime import datetime
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.conf import settings
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
 
 from register.forms import UserRegistrationForm, LoginForm, AdminRegistrationForm
 from register.models import UserProfile
+
+
+def _send_email(subject, template, context, to_email):
+    try:
+        html_body = render_to_string(template, context)
+        msg = EmailMultiAlternatives(subject, '', settings.DEFAULT_FROM_EMAIL, [to_email])
+        msg.attach_alternative(html_body, 'text/html')
+        msg.send(fail_silently=True)
+    except Exception:
+        pass
 
 
 def _get_initial_balance(currency):
@@ -48,6 +61,19 @@ def register_view(request):
             is_admin=False,
         )
         login(request, user)
+        _send_email(
+            subject=f'Welcome to {settings.SITE_NAME} — Account Created',
+            template='emails/registration_confirm.html',
+            context={
+                'site_name': settings.SITE_NAME,
+                'first_name': user.first_name,
+                'username': user.username,
+                'email': user.email,
+                'currency': cd['currency'],
+                'balance': balance,
+            },
+            to_email=user.email,
+        )
         return redirect('dashboard')
     return render(request, 'register/register.html', {'form': form})
 
@@ -59,6 +85,17 @@ def login_view(request):
     if request.method == 'POST' and form.is_valid():
         user = form.get_user()
         login(request, user)
+        _send_email(
+            subject=f'{settings.SITE_NAME} — New Login to Your Account',
+            template='emails/login_confirm.html',
+            context={
+                'site_name': settings.SITE_NAME,
+                'first_name': user.first_name,
+                'username': user.username,
+                'login_time': datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC'),
+            },
+            to_email=user.email,
+        )
         if hasattr(user, 'profile') and user.profile.is_admin:
             return redirect('admin_dashboard')
         return redirect('dashboard')
