@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard - WebApps2026{% endblock %}
+
+{% block content %}
+<h4 class="mb-4"><i class="bi bi-speedometer2"></i> Admin Dashboard</h4>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card p-3 text-center">
+            <i class="bi bi-people fs-2 text-primary"></i>
+            <h5 class="mt-2">{{ users|length }}</h5>
+            <p class="text-muted small mb-0">Total Users</p>
+        </div>
+    </div>
+</div>
+
+<div class="card p-3">
+    <h6 class="mb-3"><i class="bi bi-people"></i> Registered Users</h6>
+    {% if users %}
+    <table class="table table-hover table-sm">
+        <thead class="table-light">
+            <tr>
+                <th>Username</th>
+                <th>Full Name</th>
+                <th>Email</th>
+                <th>Currency</th>
+                <th>Balance</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for u in users %}
+            <tr>
+                <td>{{ u.user.username }}</td>
+                <td>{{ u.user.get_full_name }}</td>
+                <td>{{ u.user.email }}</td>
+                <td>{{ u.currency }}</td>
+                <td>{{ u.balance }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="text-muted small">No users registered yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

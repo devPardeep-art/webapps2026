@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Register - WebApps2026{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+{% endblock %}
+
+{% block content %}
+<div class="register-wrapper">
+    <div class="register-card">
+
+        <div class="card-header-custom">
+            <div class="icon-circle-sm"><i class="bi bi-person-plus-fill"></i></div>
+            <h4>Create Account</h4>
+            <p>Join WebApps2026 and start transferring money</p>
+            <svg class="header-wave" viewBox="0 0 800 48" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                <path d="M0,24 C200,60 600,-12 800,24 L800,48 L0,48 Z" fill="#ffffff"/>
+            </svg>
+        </div>
+
+        <div class="card-body-custom">
+
+            {% if form.non_field_errors %}
+            <div class="error-alert">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+            </div>
+            {% endif %}
+
+            <form method="post" id="registerForm">
+                {% csrf_token %}
+                <div class="form-grid">
+                    {% for field in form %}
+                    <div class="form-group {% if field.field.widget.input_type == 'select' or forloop.last %}full-width{% endif %}">
+                        {{ field.label_tag }}
+                        {{ field }}
+                        {% if field.help_text %}<small class="help-block">{{ field.help_text|safe }}</small>{% endif %}
+                        {% for error in field.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <button type="submit" class="btn-register" id="registerBtn">
+                    <i class="bi bi-check-circle-fill"></i> Create Account <i class="bi bi-arrow-right-short fs-5"></i>
+                </button>
+            </form>
+
+            <div class="divider"><span>OR</span></div>
+            <div class="login-link">
+                <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function() {
+    var form = document.getElementById('registerForm');
+    var btn  = document.getElementById('registerBtn');
+    if (form) {
+        form.addEventListener('submit', function() {
+            if (btn) { btn.disabled = true; btn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i> Creating Account...'; }
+        });
+    }
+
+    document.querySelectorAll('input[type="password"]').forEach(function(field) {
+        var wrapper = document.createElement('div');
+        wrapper.className = 'password-wrapper';
+        field.parentNode.insertBefore(wrapper, field);
+        wrapper.appendChild(field);
+
+        var toggle = document.createElement('span');
+        toggle.className = 'password-toggle';
+        toggle.innerHTML = '<i class="bi bi-eye-fill"></i>';
+        wrapper.appendChild(toggle);
+
+        toggle.addEventListener('click', function() {
+            var type = field.getAttribute('type') === 'password' ? 'text' : 'password';
+            field.setAttribute('type', type);
+            toggle.innerHTML = type === 'password' ? '<i class="bi bi-eye-fill"></i>' : '<i class="bi bi-eye-slash-fill"></i>';
+        });
+    });
+})();
+</script>
+{% endblock %}

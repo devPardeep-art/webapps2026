@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}All Transactions - WebApps2026{% endblock %}
+
+{% block content %}
+<h4 class="mb-4"><i class="bi bi-list-ul"></i> All Transactions</h4>
+
+<div class="card p-3">
+    {% if transactions %}
+    <table class="table table-hover table-sm">
+        <thead class="table-light">
+            <tr>
+                <th>From</th>
+                <th>To</th>
+                <th>Amount</th>
+                <th>Converted</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for t in transactions %}
+            <tr>
+                <td>{{ t.sender.get_full_name }} ({{ t.sender_currency }})</td>
+                <td>{{ t.receiver.get_full_name }} ({{ t.receiver_currency }})</td>
+                <td>{{ t.amount }} {{ t.sender_currency }}</td>
+                <td>{{ t.converted_amount }} {{ t.receiver_currency }}</td>
+                <td>{{ t.timestamp|date:"d M Y H:i" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="text-muted small">No transactions found.</p>
+    {% endif %}
+</div>
+{% endblock %}
